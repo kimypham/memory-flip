@@ -6,6 +6,8 @@
             body {
                 font-family: Arial, Helvetica, sans-serif;
                 padding: 10px;
+                justify-self: center;
+                text-align: center;
             }
 
             .card-container {
@@ -30,6 +32,7 @@
                 background-color: rgb(36, 89, 141);
                 font-size: 0;
                 cursor: pointer;
+                transform: rotateY(180deg);
             }
 
             .not-clicked:hover {
@@ -42,7 +45,7 @@
                 cursor: default;
 
                 transition: transform 0.6s;
-                transform: rotateY(180deg);
+                transform: rotateY(0deg);
             }
         </style>
     </head>
@@ -58,11 +61,10 @@
         flippedCards: [],
     };
 
-    function createCard({ cardSymbol, text, onClick, className = '' }) {
+    function createCard({ cardSymbol, text, onClick }) {
         const div = document.createElement('div');
         div.textContent = cardSymbol;
-        // div.className = className;
-        div.className = className + ' not-clicked';
+        div.className = 'card not-clicked';
         div.addEventListener('click', onClick);
 
         return div;
@@ -77,8 +79,10 @@
     }
 
     function handleOnClickCard(event) {
-        if (gameState.flippedCards.length === 2) {
-            gameState.flippedCards.forEach((card) => {
+        const { flippedCards } = gameState;
+
+        if (flippedCards.length === 2) {
+            flippedCards.forEach((card) => {
                 card.classList.remove('clicked');
                 card.classList.add('not-clicked');
             });
@@ -94,20 +98,18 @@
 
     function createInitialCards() {
         const cardSymbols = ['🐶', '🐰', '🐯', '🐻', '🐼', '🐭', '🦊', '🐦'];
-        const cards = [...cardSymbols, ...cardSymbols];
+        const allCards = [...cardSymbols, ...cardSymbols];
 
-        const randomisedCards = shuffleArray(cards);
+        const randomisedCards = shuffleArray(allCards);
 
-        const arrayOfCards = cards.map((card, index) =>
+        const cardsCreated = randomisedCards.map((cardSymbol) =>
             createCard({
-                cardSymbol: card,
-                text: `card-${index + 1}`,
+                cardSymbol,
                 onClick: handleOnClickCard,
-                className: 'card',
             })
         );
 
-        document.querySelector('.card-container').append(...arrayOfCards);
+        document.querySelector('.card-container').append(...cardsCreated);
     }
 
     createInitialCards();
