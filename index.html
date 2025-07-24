@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Memory game</title>
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                padding: 10px;
+            }
+
+            .card-container {
+                display: inline-grid;
+                grid-template-columns: auto auto auto auto;
+                gap: 20px;
+            }
+            .card-container > .card {
+                width: 150px;
+                height: 150px;
+
+                border: 3px solid #2980b9;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                user-select: none;
+            }
+
+            .not-clicked {
+                background-color: rgb(36, 89, 141);
+                font-size: 0;
+                cursor: pointer;
+            }
+
+            .not-clicked:hover {
+                background-color: rgb(29, 71, 113);
+            }
+
+            .clicked {
+                font-size: 100px;
+                background-color: #e0e0e0;
+                cursor: default;
+
+                transition: transform 0.6s;
+                transform: rotateY(180deg);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Memory flip game</h1>
+        <p>Find matching pairs of cards! Click on a card to flip it.</p>
+        <div class="card-container"></div>
+    </body>
+</html>
+
+<script>
+    const gameState = {
+        flippedCards: [],
+    };
+
+    function createCard({ cardSymbol, text, onClick, className = '' }) {
+        const div = document.createElement('div');
+        div.textContent = cardSymbol;
+        // div.className = className;
+        div.className = className + ' not-clicked';
+        div.addEventListener('click', onClick);
+
+        return div;
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function handleOnClickCard(event) {
+        if (gameState.flippedCards.length === 2) {
+            gameState.flippedCards.forEach((card) => {
+                card.classList.remove('clicked');
+                card.classList.add('not-clicked');
+            });
+            gameState.flippedCards = [];
+        }
+
+        const target = event.target;
+
+        gameState.flippedCards.push(target);
+        target.classList.remove('not-clicked');
+        target.classList.add('clicked');
+    }
+
+    function createInitialCards() {
+        const cardSymbols = ['🐶', '🐰', '🐯', '🐻', '🐼', '🐭', '🦊', '🐦'];
+        const cards = [...cardSymbols, ...cardSymbols];
+
+        const randomisedCards = shuffleArray(cards);
+
+        const arrayOfCards = cards.map((card, index) =>
+            createCard({
+                cardSymbol: card,
+                text: `card-${index + 1}`,
+                onClick: handleOnClickCard,
+                className: 'card',
+            })
+        );
+
+        document.querySelector('.card-container').append(...arrayOfCards);
+    }
+
+    createInitialCards();
+</script>
