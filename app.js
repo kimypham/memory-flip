@@ -2,6 +2,8 @@ const gameState = {
     flippedCards: [],
     cardShowTimeLength: 1000,
     timeoutId: null,
+    numberOfMatchesToFind: null,
+    numberOfMatchesFound: 0,
 };
 
 function createCard({ cardSymbol, onClick }) {
@@ -47,6 +49,14 @@ function handleOnClickCard(event) {
             flippedCards.forEach((card) => {
                 card.classList.add('matched');
             });
+            gameState.numberOfMatchesFound++;
+
+            if (
+                gameState.numberOfMatchesFound ===
+                gameState.numberOfMatchesToFind
+            ) {
+                alert('You won!');
+            }
         } else {
             gameState.timeoutId = setTimeout(() => {
                 flippedCards.forEach((card) => {
@@ -67,13 +77,8 @@ function handleOnClickCard(event) {
     }
 }
 
-function createInitialCards() {
-    const cardSymbols = ['🐶', '🐰', '🐯', '🐻', '🐼', '🐭', '🦊', '🐦'];
-    const allCards = [...cardSymbols, ...cardSymbols];
-
-    const randomisedCards = shuffleArray(allCards);
-
-    const cardsCreated = randomisedCards.map((cardSymbol) =>
+function displayInitialCards(cards) {
+    const cardsCreated = cards.map((cardSymbol) =>
         createCard({
             cardSymbol,
             onClick: handleOnClickCard,
@@ -83,4 +88,13 @@ function createInitialCards() {
     document.querySelector('.card-container').append(...cardsCreated);
 }
 
-createInitialCards();
+function generateInitialCardList() {
+    const cardSymbols = ['🐶', '🐰', '🐯', '🐻', '🐼', '🐭', '🦊', '🐦'];
+    gameState.numberOfMatchesToFind = cardSymbols.length;
+
+    const allCards = [...cardSymbols, ...cardSymbols];
+
+    return shuffleArray(allCards);
+}
+
+displayInitialCards(generateInitialCardList());
