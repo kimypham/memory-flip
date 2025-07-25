@@ -1,8 +1,9 @@
 const gameState = {
     flippedCards: [],
+    cardShowTimeLength: 1000,
 };
 
-function createCard({ cardSymbol, text, onClick }) {
+function createCard({ cardSymbol, onClick }) {
     const div = document.createElement('div');
     div.textContent = cardSymbol;
     div.className = 'card not-clicked';
@@ -19,22 +20,35 @@ function shuffleArray(array) {
     return array;
 }
 
+function flipCard(card) {
+    card.classList.remove('not-clicked');
+    card.classList.add('clicked');
+}
+
+function unflipCard(card) {
+    card.classList.remove('clicked');
+    card.classList.add('not-clicked');
+}
+
 function handleOnClickCard(event) {
-    const { flippedCards } = gameState;
+    const { flippedCards, cardShowTimeLength } = gameState;
 
     if (flippedCards.length === 2) {
-        flippedCards.forEach((card) => {
-            card.classList.remove('clicked');
-            card.classList.add('not-clicked');
-        });
-        gameState.flippedCards = [];
+        return;
     }
 
     const target = event.target;
+    flippedCards.push(target);
+    flipCard(target);
 
-    gameState.flippedCards.push(target);
-    target.classList.remove('not-clicked');
-    target.classList.add('clicked');
+    if (flippedCards.length === 2) {
+        setTimeout(() => {
+            flippedCards.forEach((card) => {
+                unflipCard(card);
+            });
+            gameState.flippedCards = [];
+        }, cardShowTimeLength);
+    }
 }
 
 function createInitialCards() {
