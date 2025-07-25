@@ -4,6 +4,7 @@ const initialGameState = {
     timeoutId: null,
     numberOfMatchesToFind: null,
     numberOfMatchesFound: 0,
+    numberOfMatchesTried: 0,
 };
 
 var gameState = { ...initialGameState };
@@ -63,6 +64,10 @@ function handleOnClickCard(event) {
     }
 
     if (gameState.flippedCards.length === 2) {
+        gameState.numberOfMatchesTried++;
+        document.querySelector('.number-of-matches-tried').textContent =
+            gameState.numberOfMatchesTried;
+
         if (isCardMatch(gameState.flippedCards[0], gameState.flippedCards[1])) {
             gameState.flippedCards.forEach((card) => {
                 card.classList.add('matched');
@@ -73,7 +78,11 @@ function handleOnClickCard(event) {
                 gameState.numberOfMatchesFound ===
                 gameState.numberOfMatchesToFind
             ) {
-                showModal();
+                document.querySelector(
+                    '.modal .number-of-matches-tried'
+                ).textContent = gameState.numberOfMatchesTried;
+
+                showPlayAgainModal();
             }
         } else {
             const cardsToUnflip = [...gameState.flippedCards];
@@ -83,6 +92,7 @@ function handleOnClickCard(event) {
                 });
             }, gameState.cardShowTimeLength);
         }
+
         gameState.flippedCards = [];
     }
 
@@ -120,6 +130,7 @@ document.querySelector('.play-again-button').addEventListener('click', () => {
     hidePlayAgainModal();
 
     document.querySelector('.card-container').innerHTML = '';
+    document.querySelector('.number-of-matches-tried').textContent = '0';
     gameState = { ...initialGameState };
 
     displayInitialCards(generateInitialCardList());
