@@ -7,10 +7,13 @@
     <body>
         <h1>Memory flip game</h1>
         <p>Find matching pairs of cards! Click on a card to flip it.</p>
-        <p>
-            Number of matches tried:
-            <span class="number-of-matches-tried">0</span>
-        </p>
+        <div class="game-info">
+            <p>
+                Number of matches tried:
+                <span class="number-of-matches-tried">0</span>
+            </p>
+            <p>Time: <span class="seconds-counter">0</span> seconds</p>
+        </div>
         <div class="card-container"></div>
         <div class="modal">
             <div class="play-again">
@@ -18,7 +21,8 @@
                 <h2>You won!</h2>
                 <p>
                     You found all pairs in
-                    <span class="number-of-matches-tried">0</span> tries.
+                    <span class="number-of-matches-tried">0</span> tries and
+                    <span class="seconds-counter">0</span> seconds.
                 </p>
                 <button class="play-again-button">Play again</button>
             </div>

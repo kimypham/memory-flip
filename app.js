@@ -5,6 +5,8 @@ const initialGameState = {
     numberOfMatchesToFind: null,
     numberOfMatchesFound: 0,
     numberOfMatchesTried: 0,
+    secondsTaken: 0,
+    secondsInterval: null,
 };
 
 var gameState = { ...initialGameState };
@@ -78,9 +80,12 @@ function handleOnClickCard(event) {
                 gameState.numberOfMatchesFound ===
                 gameState.numberOfMatchesToFind
             ) {
+                clearInterval(gameState.secondsInterval);
                 document.querySelector(
                     '.modal .number-of-matches-tried'
                 ).textContent = gameState.numberOfMatchesTried;
+                document.querySelector('.modal .seconds-counter').textContent =
+                    gameState.secondsTaken;
 
                 showPlayAgainModal();
             }
@@ -126,14 +131,26 @@ function generateInitialCardList() {
     return shuffleArray(allCards);
 }
 
-document.querySelector('.play-again-button').addEventListener('click', () => {
-    hidePlayAgainModal();
+function incrementSeconds() {
+    gameState.secondsTaken++;
+    document.querySelector('.seconds-counter').textContent =
+        gameState.secondsTaken;
+}
 
+function resetGame() {
     document.querySelector('.card-container').innerHTML = '';
     document.querySelector('.number-of-matches-tried').textContent = '0';
+    document.querySelector('.seconds-counter').textContent = '0';
     gameState = { ...initialGameState };
 
     displayInitialCards(generateInitialCardList());
+    gameState.secondsInterval = setInterval(incrementSeconds, 1000);
+}
+
+document.querySelector('.play-again-button').addEventListener('click', () => {
+    hidePlayAgainModal();
+    resetGame();
 });
 
 displayInitialCards(generateInitialCardList());
+gameState.secondsInterval = setInterval(incrementSeconds, 1000);
