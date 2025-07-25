@@ -10,11 +10,11 @@ body {
     grid-template-columns: auto auto auto auto;
     gap: 20px;
 }
-.card-container > .card {
+.card {
     width: 150px;
     height: 150px;
 
-    border: 3px solid #2980b9;
+    border: 3px solid #2d4e9c;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -24,7 +24,7 @@ body {
 }
 
 .not-clicked {
-    background-color: rgb(36, 89, 141);
+    background-color: #24598d;
     font-size: 0;
     cursor: pointer;
     transition: transform 0.6s;
@@ -38,8 +38,14 @@ body {
 .clicked {
     font-size: 100px;
     background-color: #e0e0e0;
+    border: 3px solid rgb(175, 175, 175);
     cursor: default;
 
     transition: transform 0.6s;
     transform: rotateY(0deg);
+}
+
+.matched {
+    border: 3px solid #1e9275;
+    background-color: #77d380;
 }

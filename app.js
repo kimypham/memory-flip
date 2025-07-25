@@ -30,6 +30,10 @@ function unflipCard(card) {
     card.classList.add('not-clicked');
 }
 
+function isCardMatch(card1, card2) {
+    return card1.textContent === card2.textContent;
+}
+
 function handleOnClickCard(event) {
     const { flippedCards, cardShowTimeLength } = gameState;
 
@@ -42,12 +46,18 @@ function handleOnClickCard(event) {
     flipCard(target);
 
     if (flippedCards.length === 2) {
-        setTimeout(() => {
-            flippedCards.forEach((card) => {
-                unflipCard(card);
-            });
+        if (isCardMatch(flippedCards[0], flippedCards[1])) {
+            flippedCards[0].classList.add('matched');
+            flippedCards[1].classList.add('matched');
             gameState.flippedCards = [];
-        }, cardShowTimeLength);
+        } else {
+            setTimeout(() => {
+                flippedCards.forEach((card) => {
+                    unflipCard(card);
+                });
+                gameState.flippedCards = [];
+            }, cardShowTimeLength);
+        }
     }
 }
 
