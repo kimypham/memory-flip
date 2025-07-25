@@ -2,115 +2,13 @@
 <html>
     <head>
         <title>Memory game</title>
-        <style>
-            body {
-                font-family: Arial, Helvetica, sans-serif;
-                padding: 10px;
-                justify-self: center;
-                text-align: center;
-            }
-
-            .card-container {
-                display: inline-grid;
-                grid-template-columns: auto auto auto auto;
-                gap: 20px;
-            }
-            .card-container > .card {
-                width: 150px;
-                height: 150px;
-
-                border: 3px solid #2980b9;
-                border-radius: 8px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                user-select: none;
-            }
-
-            .not-clicked {
-                background-color: rgb(36, 89, 141);
-                font-size: 0;
-                cursor: pointer;
-                transform: rotateY(180deg);
-            }
-
-            .not-clicked:hover {
-                background-color: rgb(29, 71, 113);
-            }
-
-            .clicked {
-                font-size: 100px;
-                background-color: #e0e0e0;
-                cursor: default;
-
-                transition: transform 0.6s;
-                transform: rotateY(0deg);
-            }
-        </style>
+        <link rel="stylesheet" href="style.css" />
     </head>
     <body>
         <h1>Memory flip game</h1>
         <p>Find matching pairs of cards! Click on a card to flip it.</p>
         <div class="card-container"></div>
+
+        <script src="app.js"></script>
     </body>
 </html>
-
-<script>
-    const gameState = {
-        flippedCards: [],
-    };
-
-    function createCard({ cardSymbol, text, onClick }) {
-        const div = document.createElement('div');
-        div.textContent = cardSymbol;
-        div.className = 'card not-clicked';
-        div.addEventListener('click', onClick);
-
-        return div;
-    }
-
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-
-    function handleOnClickCard(event) {
-        const { flippedCards } = gameState;
-
-        if (flippedCards.length === 2) {
-            flippedCards.forEach((card) => {
-                card.classList.remove('clicked');
-                card.classList.add('not-clicked');
-            });
-            gameState.flippedCards = [];
-        }
-
-        const target = event.target;
-
-        gameState.flippedCards.push(target);
-        target.classList.remove('not-clicked');
-        target.classList.add('clicked');
-    }
-
-    function createInitialCards() {
-        const cardSymbols = ['🐶', '🐰', '🐯', '🐻', '🐼', '🐭', '🦊', '🐦'];
-        const allCards = [...cardSymbols, ...cardSymbols];
-
-        const randomisedCards = shuffleArray(allCards);
-
-        const cardsCreated = randomisedCards.map((cardSymbol) =>
-            createCard({
-                cardSymbol,
-                onClick: handleOnClickCard,
-            })
-        );
-
-        document.querySelector('.card-container').append(...cardsCreated);
-    }
-
-    createInitialCards();
-</script>

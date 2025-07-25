@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px;
+    justify-self: center;
+    text-align: center;
+}
+
+.card-container {
+    display: inline-grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 20px;
+}
+.card-container > .card {
+    width: 150px;
+    height: 150px;
+
+    border: 3px solid #2980b9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    user-select: none;
+}
+
+.not-clicked {
+    background-color: rgb(36, 89, 141);
+    font-size: 0;
+    cursor: pointer;
+    transform: rotateY(180deg);
+}
+
+.not-clicked:hover {
+    background-color: rgb(29, 71, 113);
+}
+
+.clicked {
+    font-size: 100px;
+    background-color: #e0e0e0;
+    cursor: default;
+
+    transition: transform 0.6s;
+    transform: rotateY(0deg);
+}
