@@ -1,6 +1,7 @@
 const gameState = {
     flippedCards: [],
     cardShowTimeLength: 1000,
+    timeoutId: null,
 };
 
 function createCard({ cardSymbol, onClick }) {
@@ -37,27 +38,32 @@ function isCardMatch(card1, card2) {
 function handleOnClickCard(event) {
     const { flippedCards, cardShowTimeLength } = gameState;
 
-    if (flippedCards.length === 2) {
-        return;
-    }
-
     const target = event.target;
     flippedCards.push(target);
     flipCard(target);
 
     if (flippedCards.length === 2) {
         if (isCardMatch(flippedCards[0], flippedCards[1])) {
-            flippedCards[0].classList.add('matched');
-            flippedCards[1].classList.add('matched');
-            gameState.flippedCards = [];
+            flippedCards.forEach((card) => {
+                card.classList.add('matched');
+            });
         } else {
-            setTimeout(() => {
+            gameState.timeoutId = setTimeout(() => {
                 flippedCards.forEach((card) => {
                     unflipCard(card);
                 });
-                gameState.flippedCards = [];
             }, cardShowTimeLength);
         }
+        gameState.flippedCards = [];
+    }
+
+    if (flippedCards.length === 3) {
+        for (let i = 0; i < 2; i++) {
+            unflipCard(flippedCards[i]);
+        }
+
+        gameState.flippedCards = [target];
+        clearTimeout(gameState.timeoutId);
     }
 }
 
