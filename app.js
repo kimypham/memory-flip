@@ -1,10 +1,12 @@
-const gameState = {
+const initialGameState = {
     flippedCards: [],
     cardShowTimeLength: 1000,
     timeoutId: null,
     numberOfMatchesToFind: null,
     numberOfMatchesFound: 0,
 };
+
+var gameState = { ...initialGameState };
 
 function createCard({ cardSymbol, onClick }) {
     const div = document.createElement('div');
@@ -33,20 +35,36 @@ function unflipCard(card) {
     card.classList.add('not-clicked');
 }
 
+function showPlayAgainModal() {
+    document.querySelector('.modal').style.opacity = '1';
+    document.querySelector('.modal').style.display = 'block';
+}
+
+function hidePlayAgainModal() {
+    document.querySelector('.modal').style.opacity = '0';
+    document.querySelector('.modal').style.display = 'none';
+}
+
 function isCardMatch(card1, card2) {
     return card1.textContent === card2.textContent;
 }
 
 function handleOnClickCard(event) {
-    const { flippedCards, cardShowTimeLength } = gameState;
-
     const target = event.target;
-    flippedCards.push(target);
-    flipCard(target);
 
-    if (flippedCards.length === 2) {
-        if (isCardMatch(flippedCards[0], flippedCards[1])) {
-            flippedCards.forEach((card) => {
+    if (
+        target.classList.contains('clicked') ||
+        target.classList.contains('matched')
+    ) {
+        return;
+    } else {
+        gameState.flippedCards.push(target);
+        flipCard(target);
+    }
+
+    if (gameState.flippedCards.length === 2) {
+        if (isCardMatch(gameState.flippedCards[0], gameState.flippedCards[1])) {
+            gameState.flippedCards.forEach((card) => {
                 card.classList.add('matched');
             });
             gameState.numberOfMatchesFound++;
@@ -55,21 +73,22 @@ function handleOnClickCard(event) {
                 gameState.numberOfMatchesFound ===
                 gameState.numberOfMatchesToFind
             ) {
-                alert('You won!');
+                showModal();
             }
         } else {
+            const cardsToUnflip = [...gameState.flippedCards];
             gameState.timeoutId = setTimeout(() => {
-                flippedCards.forEach((card) => {
+                cardsToUnflip.forEach((card) => {
                     unflipCard(card);
                 });
-            }, cardShowTimeLength);
+            }, gameState.cardShowTimeLength);
         }
         gameState.flippedCards = [];
     }
 
-    if (flippedCards.length === 3) {
+    if (gameState.flippedCards.length > 2) {
         for (let i = 0; i < 2; i++) {
-            unflipCard(flippedCards[i]);
+            unflipCard(gameState.flippedCards[i]);
         }
 
         gameState.flippedCards = [target];
@@ -96,5 +115,14 @@ function generateInitialCardList() {
 
     return shuffleArray(allCards);
 }
+
+document.querySelector('.play-again-button').addEventListener('click', () => {
+    hidePlayAgainModal();
+
+    document.querySelector('.card-container').innerHTML = '';
+    gameState = { ...initialGameState };
+
+    displayInitialCards(generateInitialCardList());
+});
 
 displayInitialCards(generateInitialCardList());
